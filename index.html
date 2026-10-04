@@ -1,184 +1,1404 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unimate - Find Your Uni Buddy</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+<title>Unimate — Find Your Uni Buddy</title>
 
-        body {
-            background: #f7f9fc;
-            color: #172033;
-        }
+<style>
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 8%;
-            background: white;
-        }
+/* =========================
+   GLOBAL
+========================= */
 
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: #2563eb;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
-        nav a {
-            text-decoration: none;
-            color: #172033;
-            margin-left: 25px;
-        }
+html {
+    scroll-behavior: smooth;
+}
 
-        .hero {
-            text-align: center;
-            padding: 100px 20px;
-            background: linear-gradient(135deg, #eaf2ff, #ffffff);
-        }
+body {
+    background: #070b18;
+    color: white;
+    overflow-x: hidden;
+}
 
-        .hero h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
+/* Background glow */
 
-        .hero h1 span {
-            color: #2563eb;
-        }
+body::before {
+    content: "";
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    background: #6c4cff;
+    filter: blur(180px);
+    opacity: 0.22;
+    top: -180px;
+    left: -180px;
+    z-index: -1;
+}
 
-        .hero p {
-            font-size: 20px;
-            color: #5b6475;
-            max-width: 650px;
-            margin: auto;
-            line-height: 1.6;
-        }
+body::after {
+    content: "";
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    background: #00d4ff;
+    filter: blur(180px);
+    opacity: 0.14;
+    bottom: -200px;
+    right: -150px;
+    z-index: -1;
+}
 
-        .button {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 14px 28px;
-            background: #2563eb;
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-            font-weight: bold;
-        }
+/* =========================
+   NAVBAR
+========================= */
 
-        .section {
-            padding: 70px 8%;
-            text-align: center;
-        }
+nav {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 15px 25px;
 
-        .section h2 {
-            font-size: 32px;
-            margin-bottom: 40px;
-        }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-        .cards {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
 
-        .card {
-            background: white;
-            width: 220px;
-            padding: 30px 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        }
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
 
-        .card h3 {
-            margin-bottom: 10px;
-        }
+    border-radius: 20px;
 
-        .card p {
-            color: #687386;
-        }
+    position: sticky;
+    top: 15px;
 
-        footer {
-            text-align: center;
-            padding: 30px;
-            background: #172033;
-            color: white;
-        }
-    </style>
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.logo span {
+    color: #8065ff;
+}
+
+nav a {
+    color: #c5c9d8;
+    text-decoration: none;
+    margin-left: 25px;
+    font-size: 14px;
+
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: white;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    min-height: 82vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    padding: 80px 20px;
+}
+
+.hero-content {
+    max-width: 950px;
+}
+
+.badge {
+    display: inline-block;
+
+    padding: 10px 18px;
+
+    border-radius: 50px;
+
+    background: rgba(124,92,255,0.12);
+    border: 1px solid rgba(124,92,255,0.4);
+
+    color: #b9adff;
+
+    margin-bottom: 25px;
+
+    font-size: 14px;
+}
+
+.hero h1 {
+    font-size: clamp(55px, 9vw, 105px);
+
+    line-height: 0.95;
+
+    margin-bottom: 28px;
+
+    background: linear-gradient(
+        90deg,
+        #ffffff,
+        #a999ff,
+        #62e8ff
+    );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+
+    text-shadow: 0 20px 60px rgba(103,82,255,0.15);
+}
+
+.hero p {
+    color: #aeb4c7;
+
+    font-size: 19px;
+
+    max-width: 700px;
+
+    margin: auto;
+
+    line-height: 1.7;
+}
+
+.hero-buttons {
+    margin-top: 35px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn {
+    display: inline-block;
+
+    padding: 16px 28px;
+
+    margin: 7px;
+
+    border-radius: 15px;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    transition: 0.3s;
+}
+
+.primary {
+    background: linear-gradient(
+        135deg,
+        #7357ff,
+        #00cfff
+    );
+
+    color: white;
+
+    box-shadow:
+        0 15px 40px rgba(82,75,255,0.35);
+}
+
+.secondary {
+    border: 1px solid #39405a;
+
+    color: white;
+
+    background: rgba(255,255,255,0.04);
+}
+
+.btn:hover {
+    transform: translateY(-5px) scale(1.03);
+}
+
+/* =========================
+   FLOATING ORBS
+========================= */
+
+.orb {
+    position: absolute;
+
+    border-radius: 50%;
+
+    filter: blur(1px);
+
+    opacity: 0.55;
+
+    animation: float 6s ease-in-out infinite;
+
+    z-index: -1;
+}
+
+.orb1 {
+    width: 90px;
+    height: 90px;
+
+    background: linear-gradient(
+        135deg,
+        #8b5cff,
+        #00d4ff
+    );
+
+    left: 8%;
+    top: 35%;
+}
+
+.orb2 {
+    width: 65px;
+    height: 65px;
+
+    background: linear-gradient(
+        135deg,
+        #ff5cce,
+        #7c5cff
+    );
+
+    right: 10%;
+    top: 25%;
+
+    animation-delay: 2s;
+}
+
+.orb3 {
+    width: 45px;
+    height: 45px;
+
+    background: #00d4ff;
+
+    right: 20%;
+    bottom: 15%;
+
+    animation-delay: 1s;
+}
+
+@keyframes float {
+
+    0%,100% {
+        transform: translateY(0) rotate(0);
+    }
+
+    50% {
+        transform: translateY(-25px) rotate(20deg);
+    }
+}
+
+/* =========================
+   SECTION
+========================= */
+
+section {
+    width: 90%;
+
+    max-width: 1200px;
+
+    margin: 110px auto;
+}
+
+.section-title {
+    text-align: center;
+
+    margin-bottom: 50px;
+}
+
+.section-title h2 {
+    font-size: 43px;
+
+    margin-bottom: 12px;
+}
+
+.section-title p {
+    color: #9ba2b8;
+
+    font-size: 16px;
+}
+
+/* =========================
+   COUNTRY GRID
+========================= */
+
+.countries {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 25px;
+}
+
+/* 3D CARD */
+
+.card {
+    min-height: 245px;
+
+    padding: 27px;
+
+    border-radius: 26px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.12),
+            rgba(255,255,255,0.025)
+        );
+
+    border: 1px solid
+        rgba(255,255,255,0.11);
+
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    transform-style: preserve-3d;
+
+    transition: 0.45s;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.card:hover {
+
+    transform:
+        perspective(900px)
+        rotateX(7deg)
+        rotateY(-7deg)
+        translateY(-12px)
+        scale(1.02);
+
+    border-color:
+        rgba(124,92,255,0.6);
+
+    box-shadow:
+        0 30px 70px rgba(0,0,0,0.4);
+}
+
+.card::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 140px;
+    height: 140px;
+
+    border-radius: 50%;
+
+    background: #765cff;
+
+    filter: blur(70px);
+
+    right: -50px;
+    bottom: -50px;
+
+    opacity: 0.3;
+}
+
+.flag {
+
+    font-size: 52px;
+
+    margin-bottom: 15px;
+
+    display: block;
+
+    transform: translateZ(35px);
+}
+
+.card h3 {
+
+    font-size: 23px;
+
+    margin-bottom: 9px;
+
+    transform: translateZ(25px);
+}
+
+.card p {
+
+    color: #9fa6ba;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    margin-bottom: 20px;
+
+    transform: translateZ(20px);
+}
+
+.explore {
+
+    color: #9d8cff;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+    transform: translateZ(25px);
+
+    display: inline-block;
+
+    position: relative;
+
+    z-index: 5;
+}
+
+.explore:hover {
+    color: white;
+}
+
+/* =========================
+   HOW IT WORKS
+========================= */
+
+.steps {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+}
+
+.step {
+
+    text-align: center;
+
+    padding: 32px 20px;
+
+    background:
+        rgba(255,255,255,0.05);
+
+    border-radius: 22px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.08);
+
+    transition: 0.3s;
+}
+
+.step:hover {
+
+    transform: translateY(-8px);
+
+    background:
+        rgba(255,255,255,0.08);
+}
+
+.number {
+
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7357ff,
+            #00cfff
+        );
+
+    font-weight: bold;
+
+    font-size: 20px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(80,80,255,0.3);
+}
+
+.step p {
+
+    color: #999fb4;
+
+    margin-top: 10px;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+/* =========================
+   FEATURES
+========================= */
+
+.features {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 25px;
+}
+
+.feature {
+
+    padding: 32px;
+
+    border-radius: 23px;
+
+    background:
+        rgba(255,255,255,0.05);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.08);
+
+    transition: 0.3s;
+}
+
+.feature:hover {
+
+    transform: translateY(-8px);
+
+    border-color:
+        rgba(124,92,255,0.4);
+}
+
+.feature-icon {
+
+    font-size: 38px;
+
+    margin-bottom: 17px;
+}
+
+.feature h3 {
+
+    font-size: 21px;
+}
+
+.feature p {
+
+    color: #9da4b8;
+
+    line-height: 1.6;
+
+    margin-top: 10px;
+}
+
+/* =========================
+   CTA
+========================= */
+
+.cta {
+
+    text-align: center;
+
+    padding: 90px 30px;
+
+    border-radius: 35px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            rgba(124,92,255,0.25),
+            rgba(0,212,255,0.12)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,0.1);
+
+    box-shadow:
+        inset 0 0 80px
+        rgba(124,92,255,0.08);
+}
+
+.cta h2 {
+
+    font-size: 48px;
+
+    margin-bottom: 20px;
+}
+
+.cta p {
+
+    color: #adb3c6;
+
+    margin-bottom: 25px;
+
+    font-size: 17px;
+}
+
+/* =========================
+   SOCIAL LINKS
+========================= */
+
+.social-links {
+
+    margin-top: 25px;
+}
+
+.social-links a {
+
+    display: inline-block;
+
+    margin: 7px;
+
+    padding: 12px 18px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    background:
+        rgba(255,255,255,0.05);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.1);
+
+    transition: 0.3s;
+}
+
+.instagram {
+
+    color: #ff75c8;
+}
+
+.whatsapp {
+
+    color: #25D366;
+}
+
+.social-links a:hover {
+
+    transform: translateY(-4px);
+
+    background:
+        rgba(255,255,255,0.1);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+
+    text-align: center;
+
+    padding: 55px 20px;
+
+    color: #737a90;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,0.07);
+}
+
+footer .logo {
+
+    margin-bottom: 12px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width: 1000px) {
+
+    .countries {
+
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+    .steps {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 750px) {
+
+    nav {
+
+        width: 94%;
+    }
+
+    nav a {
+
+        display: none;
+    }
+
+    .countries {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .features {
+
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width: 550px) {
+
+    .hero {
+
+        min-height: 75vh;
+
+        padding-top: 60px;
+    }
+
+    .hero h1 {
+
+        font-size: 57px;
+    }
+
+    .hero p {
+
+        font-size: 16px;
+    }
+
+    .countries {
+
+        grid-template-columns: 1fr;
+    }
+
+    .steps {
+
+        grid-template-columns: 1fr;
+    }
+
+    .section-title h2 {
+
+        font-size: 34px;
+    }
+
+    .cta h2 {
+
+        font-size: 35px;
+    }
+
+    .orb1 {
+
+        left: -20px;
+    }
+
+    .orb2 {
+
+        right: -10px;
+    }
+}
+
+</style>
 </head>
+
 
 <body>
 
-    <nav>
-        <div class="logo">Unimate</div>
 
-        <div>
-            <a href="#home">Home</a>
-            <a href="#countries">Countries</a>
-            <a href="#about">About</a>
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+
+    <div class="logo">
+        Uni<span>mate</span>
+    </div>
+
+    <div>
+
+        <a href="#home">
+            Home
+        </a>
+
+        <a href="#countries">
+            Countries
+        </a>
+
+        <a href="#how">
+            How It Works
+        </a>
+
+        <a href="#about">
+            About
+        </a>
+
+        <a
+        href="https://instagram.com/unimate.study?stkn=MWFndmhiYTFuNWMwbA%3D%3D"
+        target="_blank">
+
+            Instagram
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- FLOATING OBJECTS -->
+
+<div class="orb orb1"></div>
+
+<div class="orb orb2"></div>
+
+<div class="orb orb3"></div>
+
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="hero" id="home">
+
+    <div class="hero-content">
+
+        <div class="badge">
+
+            🌍 The student community
+            for going abroad
+
         </div>
-    </nav>
 
-    <section class="hero" id="home">
-        <h1>Find Your <span>Uni Buddy</span></h1>
+
+        <h1>
+
+            Find Your
+            <br>
+            Uni Buddy
+
+        </h1>
+
 
         <p>
-            Connect with students going to the same country,
-            university or course. Plan your journey together.
+
+            Going abroad for university,
+            internship or exchange?
+
+            Connect with students who are
+            heading to the same country,
+            university or field.
+
         </p>
 
-        <a href="#countries" class="button">Find Your Community</a>
-    </section>
 
-    <section class="section" id="countries">
-        <h2>Explore Communities</h2>
+        <div class="hero-buttons">
 
-        <div class="cards">
+            <a
+            href="https://chat.whatsapp.com/GAXdpBt6q0I78P49dFaJl4"
+            class="btn primary"
+            target="_blank">
 
-            <div class="card">
-                <h3>🇺🇸 USA</h3>
-                <p>Connect with students planning to study in the USA.</p>
-            </div>
+                💬 Join Our Community →
 
-            <div class="card">
-                <h3>🇩🇪 Germany</h3>
-                <p>Find students preparing for Germany.</p>
-            </div>
+            </a>
 
-            <div class="card">
-                <h3>🇳🇿 New Zealand</h3>
-                <p>Meet students heading to New Zealand.</p>
-            </div>
 
-            <div class="card">
-                <h3>🇹🇼 Taiwan</h3>
-                <p>Connect with ECE, VLSI and other students.</p>
-            </div>
+            <a
+            href="https://instagram.com/unimate.study?stkn=MWFndmhiYTFuNWMwbA%3D%3D"
+            class="btn secondary"
+            target="_blank">
+
+                📸 Follow on Instagram
+
+            </a>
 
         </div>
-    </section>
 
-    <section class="section" id="about">
-        <h2>What is Unimate?</h2>
+    </div>
+
+</section>
+
+
+<!-- =========================
+     COUNTRIES
+========================= -->
+
+<section id="countries">
+
+
+    <div class="section-title">
+
+        <h2>
+            Explore Communities 🌎
+        </h2>
 
         <p>
-            Unimate is a student community designed to help you
-            find people with similar study-abroad goals.
+            Find students going where you're going.
         </p>
 
-        <a href="#" class="button">Join Unimate</a>
-    </section>
+    </div>
 
-    <footer>
-        © 2026 Unimate — Find Your Uni Buddy
-    </footer>
 
-</body>
-</html>
+    <div class="countries">
+
+
+        <!-- USA -->
+
+        <div class="card">
+
+            <span class="flag">
+                🇺🇸
+            </span>
+
+            <h3>
+                USA
+            </h3>
+
+            <p>
+                Universities, internships
+                and student connections.
+            </p>
+
+            <a
+            href="https://chat.whatsapp.com/GAXdpBt6q0I78P49dFaJl4"
+            class="explore"
+            target="_blank">
+
+                Join Community →
+
+            </a>
+
+        </div>
+
+
+        <!-- Germany -->
+
+        <div class="card">
+
+            <span class="flag">
+                🇩🇪
+            </span>
+
+            <h3>
+                Germany
+            </h3>
+
+            <p>
+                Connect with students
+                planning their Germany journey.
+            </p>
+
+            <a
+            href="https://chat.whatsapp.com/GAXdpBt6q0I78P49dFaJl4"
+            class="explore"
+            target="_blank">
+
+                Join Community →
+
+            </a>
+
+        </div>
+
+
+        <!-- Australia -->
+
+        <div class="card">
+
+            <span class="flag">
+                🇦🇺
+            </span>
+
+            <h3>
+                Australia
+            </h3>
+
+            <p>
+                Find future classmates
+                and university buddies.
+            </p>
+
+            <a
+            href="https://chat.whatsapp.com/GAXdpBt6q0I78P49dFaJl4"
+            class="explore"
+            target="_blank">
+
+                Join Community →
+
+            </a>
+
+        </div>
+
+
+        <!-- New Zealand -->
+
+        <div class="card">
+
+            <span class="flag">
+                🇳🇿
+            </span>
+
+            <h3>
+                New Zealand
+            </h3>
+
+            <p>
+                Build connections
+                before you arrive.
+            </p>
+
+            <a
+            href="https://chat.whatsapp.com/GAXdpBt6q0I78P49dFaJl4"
+            class="explore"
+            target="_blank">
+
+                Join Community →
+
+            </a>
+
+        </div>
+
+
+        <!-- Taiwan -->
+
+        <div class="card">
+
+            <span class="flag">
+                🇹🇼
+            </span>
+
+            <h3>
+                Taiwan
+            </h3>
+
+            <p>
+                Connect with students
+                interested in ECE and VLSI.
+            </p>
+
+            <a
+            href="https://chat.whatsapp.com/GAXdpBt6q0I78P49dFaJl4"
+            class="explore"
+            target="_blank">
+
+                Join Community →
+
+            </a>
+
+        </div>
+
+
+        <!-- Canada -->
+
+        <div class="card">
+
+            <span class="flag">
+                🇨🇦
+            </span>
+
+            <h3>
+                Canada
+            </h3>
+
+            <p>
+                Find students preparing
+                for Canadian universities.
+            </p>
+
+            <a
+            href="https://chat.whatsapp.com/GAXdpBt6q0I78P49dFaJl4"
+            class="explore"
+            target="_blank">
+
+                Join Community →
+
+            </a>
+
+        </div>
+
+
+        <!-- UK -->
+
+        <div class="card">
+
+            <span class="flag">
+                🇬🇧
+            </span>
+
+            <h3>
+                United Kingdom
+            </h3>
+
+            <p>
+                Connect before starting
+                your UK journey.
+            </p>
+
+            <a
+            href="https://chat.whatsapp.com/GAXdpBt6q0I78P49dFaJl4"
+            class="explore"
+            target="_blank">
+
+                Join Community →
+
+            </a>
+
+        </div>
+
+
+        <!-- Ireland -->
+
+        <div class="card">
+
+            <span class="flag">
+                🇮🇪
+            </span>
+
+            <h3>
+                Ireland
+            </h3>
+
+            <p>
+                Meet students planning
+                to study in Ireland.
+            </p>
+
+            <a
+            href="https://chat.whatsapp.com/GAXdpBt6q0I78P49dFaJl4"
+            class="explore"
+            target="_blank">
+
+                Join Community →
+
+            </a>
+
+        </div>
+
+
+        <!-- Netherlands -->
+
+        <div class="card">
+
+            <span class="flag">
+                🇳🇱
+            </span>
+
+            <h3>
+                Netherlands
+            </h3>
+
+            <p>
+                Find your future
+                university buddy.
+            </p>
+
+            <a
+            href="https://chat.whatsapp.com/GAXdpBt6q0I78P49dFaJl4"
+            class="explore"
+            target="_blank">
+
+                Join Community →
+
+            </a>
+
+        </div>
+
+
+        <!-- France -->
+
+        <div class="card">
+
+            <span class="flag">
+                🇫🇷
+            </span>
+
+            <h3>
+                France
+            </h3>
+
+            <p>
+                Connect with students
+                before you travel.
+            </p>
+
+            <a
+            href="https://chat.whatsapp.com/GAXdpBt6q0I78P49dFaJl4"
+            class="explore"
+            target="_blank">
+
+                Join Community →
+
+            </a>
+
+        </div>
+
+
+        <!-- Japan -->
+
+        <div class="card">
+
+            <span class="flag">
+                🇯🇵
+            </span>
+
+            <h3>
+                Japan
+            </h3>
+
+            <p>
+                Build your student
+                network before arrival.
+            </p>
+
+            <a
+            href="https://chat.whatsapp.com/GAXdpBt6q0I78P49dFaJl4"
+            class="explore"
+            target="_blank">
+
+                Join Community →
+
+            </a>
+
+        </div>
+
+
+        <!-- South Korea -->
+
+        <div class="card">
+
+            <span class="flag">
+                🇰🇷
+            </span>
+
+            <h3>
+                South Korea
+            </h3>
+
+            <p>
+                Connect with students
+                sharing the same destination.
+            </p>
+
+            <a
+            href="https://chat.whatsapp.com/GAXdpBt6q0I78P49dFaJl4"
+            class="explore"
+            target="_blank">
+
+                Join Community →
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     HOW IT WORKS
+========================= -->
+
+<section id="how">
+
+
+    <div class="section-title">
+
+        <h2>
+            How Unimate Works
+        </h2>
+
+        <p>
+            Four simple steps.
+        </p>
+
+    </div>
+
+
+    <div class="steps">
+
+
+        <div class="step">
+
+            <div class="number">
+                1
+            </div>
+
+            <h3>
+                Choose
+            </h3>
+
+            <p>
+                Choose your destination country.
+            </p>
+
+        </div>
+
+
+        <div class="step">
+
+            <div class="number">
+                2
+            </div>
+
+            <h3>
+                Discover
+            </h3>
+
+            <p>
+                Find students with
+                similar goals.
+            </p>
+
+        </div>
+
+
+        <div class="step">
+
+            <div class="number">
+                3
+            </div>
+
+            <h3>
+                Connect
+            </h3>
+
+            <p>
+                Talk and build
+                your network.
+            </p>
+
+        </div>
+
+
+        <div class="step">
+
+            <div class="number">
+                4
+            </div>
+
+            <h3>
+                Go Together
+            </h3>
+
+            <p>
+                Plan your j
