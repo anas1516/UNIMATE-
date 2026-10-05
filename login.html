@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unimate | Login</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#07111f,#12345b);min-height:100vh;display:flex;align-items:center;justify-content:center;color:white}.box{width:92%;max-width:420px;padding:30px;border-radius:25px;background:rgba(255,255,255,.1);backdrop-filter:blur(15px);box-shadow:0 20px 50px #0008}h1{text-align:center;margin-bottom:8px}p{text-align:center;color:#cbd5e1}input{width:100%;padding:14px;margin:8px 0;border:0;border-radius:12px;background:#ffffff18;color:white;outline:1px solid #ffffff30}input::placeholder{color:#cbd5e1}button{width:100%;padding:14px;margin-top:10px;border:0;border-radius:12px;background:#fff;color:#07111f;font-weight:bold;font-size:16px;cursor:pointer}.switch{text-align:center;margin-top:18px;color:#93c5fd;cursor:pointer}.msg{text-align:center;margin-top:15px;color:#fbbf24}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h1>🌍 Unimate</h1>
+<p>Find your Uni Buddy</p>
+
+<div id="signup">
+<input id="name" placeholder="Full Name">
+<input id="course" placeholder="Course / Field">
+<input id="year" placeholder="Current Year">
+<input id="country" placeholder="Target Country">
+<input id="intake" placeholder="Preferred Intake">
+<input id="looking" placeholder="Looking for?">
+<input id="email" type="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="signup()">Create Account</button>
+<div class="switch" onclick="showLogin()">Already have an account? Login</div>
+</div>
+
+<div id="login" style="display:none">
+<input id="lemail" type="email" placeholder="Email">
+<input id="lpassword" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<div class="switch" onclick="showSignup()">Create a new account</div>
+</div>
+
+<div id="msg" class="msg"></div>
+</div>
+
+<script>
+const SUPABASE_URL="https://nmplgvrwjdxczwynmsgf.supabase.co/rest/v1/";
+const SUPABASE_KEY="sb_publishable_6V8rcQXo1B1442rSC0SxZQ_WBo71t7t";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+function showLogin(){
+ document.getElementById("signup").style.display="none";
+ document.getElementById("login").style.display="block";
+}
+function showSignup(){
+ document.getElementById("login").style.display="none";
+ document.getElementById("signup").style.display="block";
+}
+
+async function signup(){
+ const full_name=document.getElementById("name").value;
+ const course=document.getElementById("course").value;
+ const year=document.getElementById("year").value;
+ const target_country=document.getElementById("country").value;
+ const intake=document.getElementById("intake").value;
+ const looking_for=document.getElementById("looking").value;
+ const email=document.getElementById("email").value;
+ const password=document.getElementById("password").value;
+
+ if(!full_name||!email||!password||!course||!year||!target_country||!intake){
+  return msg("Please fill all required fields");
+ }
+
+ const {data,error}=await db.auth.signUp({email,password});
+
+ if(error)return msg(error.message);
+
+ const {error:dbError}=await db.from("students").insert({
+  id:data.user.id,
+  full_name, email, course, year,
+  target_country, intake, looking_for
+ });
+
+ if(dbError)return msg(dbError.message);
+
+ msg("Account created successfully! 🎉");
+ showLogin();
+}
+
+async function login(){
+ const email=document.getElementById("lemail").value;
+ const password=document.getElementById("lpassword").value;
+
+ const {error}=await db.auth.signInWithPassword({email,password});
+
+ if(error)return msg(error.message);
+
+ msg("Login successful! ✅");
+}
+
+function msg(x){
+ document.getElementById("msg").textContent=x;
+}
+</script>
+
+</body>
+  </html>
