@@ -1,10 +1,21 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unimate — Find Your Uni Buddy</title><style>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unimate — Find Your Uni Buddy</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
 *{box-sizing:border-box;margin:0}html{scroll-behavior:smooth}body{font-family:Arial;background:radial-gradient(circle at 10% 10%,#172554,transparent 30%),radial-gradient(circle at 90% 20%,#312e81,transparent 30%),radial-gradient(circle at 50% 100%,#164e63,transparent 35%),#050816;color:#fff;overflow-x:hidden}nav{padding:20px 7%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:9;background:#050816c9;backdrop-filter:blur(18px);border-bottom:1px solid #ffffff14}.logo{font-size:28px;font-weight:900}.logo span,h1 span{color:#67e8f9}.nav{display:flex;gap:28px;list-style:none}.nav a,.social a{color:#dbeafe;text-decoration:none;font-weight:700}.hero{min-height:90vh;padding:70px 7%;display:flex;align-items:center;justify-content:space-between;gap:40px}.text{max-width:650px}.badge{display:inline-block;padding:10px 18px;border-radius:30px;background:#67e8f91a;border:1px solid #67e8f959;color:#67e8f9;margin-bottom:25px}.hero h1{font-size:clamp(48px,8vw,90px);line-height:.95;margin-bottom:25px}.hero p{color:#b8c4d9;font-size:19px;line-height:1.7;margin-bottom:30px}.buttons{display:flex;gap:15px;flex-wrap:wrap}.btn{padding:15px 24px;border-radius:14px;text-decoration:none;font-weight:800;display:inline-block;transition:.3s}.primary{background:linear-gradient(135deg,#22d3ee,#6366f1);color:#fff;box-shadow:0 15px 35px #22d3ee40}.secondary{border:1px solid #ffffff2e;background:#ffffff0f;color:#fff}.btn:hover,.card:hover,.feature:hover{transform:translateY(-8px)}.visual{width:380px;height:380px;display:grid;place-items:center;position:relative}.planet{width:260px;height:260px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#a5f3fc,transparent 8%),radial-gradient(circle at 65% 35%,#6366f1,transparent 12%),linear-gradient(135deg,#164e63,#312e81);box-shadow:inset -35px -25px 60px #0009,0 0 70px #22d3ee59;animation:f 5s infinite}.ring,.orbit{position:absolute;border-radius:50%}.ring{width:360px;height:120px;border:2px solid #67e8f980;transform:rotate(-20deg);animation:s 8s linear infinite}.orbit{width:320px;height:320px;border:1px dashed #ffffff30;animation:s 15s linear infinite}@keyframes f{50%{transform:translateY(-18px)}}@keyframes s{to{transform:rotate(360deg)}}section{padding:80px 7%}.title{text-align:center;margin-bottom:45px}.title h2,.community h2{font-size:44px;margin-bottom:12px}.title p,.community p,.about p{color:#aebbd0}.countries,.features{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}.card,.feature{padding:28px;border-radius:24px;background:linear-gradient(145deg,#ffffff1f,#ffffff09);border:1px solid #ffffff1f;backdrop-filter:blur(15px);transition:.4s;box-shadow:0 20px 40px #0004}.card{min-height:190px}.flag{font-size:42px;margin-bottom:12px}.card h3,.feature h3{margin-bottom:8px;font-size:22px}.card p,.feature p{color:#aebbd0;line-height:1.5}.features{grid-template-columns:repeat(3,1fr)}.feature-icon{font-size:38px;margin-bottom:15px}.community{margin:20px 7% 80px;padding:65px 25px;text-align:center;border-radius:35px;background:linear-gradient(135deg,#22d3ee21,#6366f129);border:1px solid #ffffff1f}.community p{max-width:650px;margin:0 auto 28px;line-height:1.7}.about{max-width:850px;margin:auto;text-align:center}.about p{font-size:18px;line-height:1.8}footer{padding:35px 7%;text-align:center;border-top:1px solid #ffffff14;color:#8fa0b8}.social{margin-bottom:18px}.social a{margin:0 10px}@media(max-width:1000px){.hero{flex-direction:column;text-align:center}.buttons{justify-content:center}.countries{grid-template-columns:repeat(2,1fr)}.features{grid-template-columns:1fr}}@media(max-width:600px){.nav{display:none}.hero{padding:55px 5%}.visual{width:300px;height:300px}.planet{width:200px;height:200px}.ring{width:280px}section{padding:60px 5%}.countries{grid-template-columns:1fr}.community{margin:15px 5% 60px}.title h2,.community h2{font-size:34px}}
+
+.auth-btn{cursor:pointer;border:0}
+.auth-overlay{position:fixed;inset:0;background:#020617cc;backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;z-index:99;padding:20px}
+.auth-box{width:min(460px,100%);background:linear-gradient(145deg,#111a35,#07101f);border:1px solid #ffffff20;border-radius:26px;padding:28px;box-shadow:0 30px 80px #0009}
+.auth-box h2{font-size:30px;margin-bottom:8px}.auth-sub{color:#9fb0c8;margin-bottom:22px}
+.auth-tabs{display:flex;gap:8px;margin-bottom:18px}.auth-tabs button{flex:1;padding:11px;border:1px solid #ffffff18;background:#ffffff09;color:#fff;border-radius:10px;cursor:pointer;font-weight:700}.auth-tabs .active{background:#22d3ee;color:#04111d}
+.auth-box input,.auth-box select,.auth-box textarea{width:100%;padding:13px;margin:7px 0;border:1px solid #ffffff18;border-radius:11px;background:#020617;color:#fff;outline:none}.auth-box textarea{min-height:80px;resize:vertical}
+.auth-submit{width:100%;margin-top:10px;border:0;cursor:pointer}.close-auth{float:right;background:none;border:0;color:#aebbd0;font-size:24px;cursor:pointer}
+.auth-msg{min-height:22px;color:#67e8f9;margin-top:10px;font-size:14px}
+.user-menu{display:none;gap:8px;align-items:center}.user-name{color:#67e8f9;font-weight:800}
+@media(max-width:600px){.user-name{display:none}}
 </style></head><body>
 
-<nav><div class="logo">Uni<span>mate</span> 🌍</div><ul class="nav"><li><a href="#home">Home</a></li><li><a href="#countries">Countries</a></li><li><a href="#why">Why Unimate</a></li><li><a href="#about">About</a></li></ul></nav>
+<nav><div class="logo">Uni<span>mate</span> 🌍</div><ul class="nav"><li><a href="#home">Home</a></li><li><a href="#countries">Countries</a></li><li><a href="#why">Why Unimate</a></li><li><a href="#about">About</a></li><li><button class="btn primary auth-btn" onclick="openAuth()">Login / Sign Up</button></li><li class="user-menu" id="userMenu"><span class="user-name" id="userName"></span><button class="btn secondary auth-btn" onclick="openProfile()">Profile</button><button class="btn secondary auth-btn" onclick="logout()">Logout</button></li></ul></nav>
 
-<section class="hero" id="home"><div class="text"><div class="badge">🌎 Students • Universities • Communities</div><h1>Find Your<br><span>Uni Buddy.</span></h1><p>Planning to study abroad? Connect with students going to the same country, university or course. Find your people before you even arrive.</p><div class="buttons"><a class="btn primary" href="https://chat.whatsapp.com/GAXdpBt6q0I78P49dFaJl4" target="_blank">💬 Join Community</a><a class="btn secondary" href="#countries">🌍 Explore Countries</a></div></div><div class="visual"><div class="orbit"></div><div class="planet"></div><div class="ring"></div></div></section>
+<section class="hero" id="home"><div class="text"><div class="badge">🌎 Students • Universities • Communities</div><h1>Find Your<br><span>Uni Buddy.</span></h1><p>Planning to study abroad? Connect with students going to the same country, university or course. Find your people before you even arrive.</p><div class="buttons"><a class="btn primary" href="https://chat.whatsapp.com/GAXdpBt6q0I78P49dFaJl4" target="_blank">💬 Join Community</a><a class="btn secondary" href="#countries">🌍 Explore Countries</a><button class="btn secondary auth-btn" onclick="openAuth()">🔐 Create Account</button></div></div><div class="visual"><div class="orbit"></div><div class="planet"></div><div class="ring"></div></div></section>
 
 <section id="countries"><div class="title"><h2>🌍 Explore Your Destination</h2><p>Find students heading to your dream country.</p></div><div class="countries" id="countryList"></div></section>
 
@@ -16,6 +27,108 @@
 
 <footer><div class="social"><a href="https://instagram.com/unimate.study?stkn=MWFndmhiYTFuNWMwbA%3D%3D" target="_blank">Instagram</a><a href="https://chat.whatsapp.com/GAXdpBt6q0I78P49dFaJl4" target="_blank">WhatsApp</a></div><p>© 2026 Unimate — Find Your Uni Buddy 🌍</p></footer>
 
+
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-box">
+    <button class="close-auth" onclick="closeAuth()">×</button>
+    <h2 id="authTitle">Welcome to Unimate</h2>
+    <p class="auth-sub" id="authSub">Create your student account.</p>
+    <div class="auth-tabs">
+      <button id="loginTab" class="active" onclick="showAuth('login')">Login</button>
+      <button id="signupTab" onclick="showAuth('signup')">Sign Up</button>
+    </div>
+    <form id="authForm" onsubmit="handleAuth(event)">
+      <div id="signupFields" style="display:none">
+        <input id="fullName" placeholder="Full name" required>
+        <input id="course" placeholder="Course / Field (e.g. ECE, VLSI)" required>
+        <input id="year" placeholder="Current year (e.g. 2nd Year)" required>
+        <select id="country" required>
+          <option value="">Target country</option>
+          <option>USA</option><option>Germany</option><option>Australia</option><option>New Zealand</option>
+          <option>Taiwan</option><option>Canada</option><option>UK</option><option>France</option>
+          <option>Italy</option><option>Netherlands</option><option>Singapore</option><option>Japan</option>
+        </select>
+        <input id="intake" placeholder="Preferred intake (e.g. Fall 2027)" required>
+        <textarea id="lookingFor" placeholder="What are you looking for? (optional)"></textarea>
+      </div>
+      <input id="email" type="email" placeholder="Email" required>
+      <input id="password" type="password" placeholder="Password (minimum 6 characters)" minlength="6" required>
+      <button class="btn primary auth-submit" id="authSubmit">Login</button>
+      <div class="auth-msg" id="authMsg"></div>
+    </form>
+  </div>
+</div>
+
+<div class="auth-overlay" id="profileOverlay">
+  <div class="auth-box">
+    <button class="close-auth" onclick="closeProfile()">×</button>
+    <h2>Your Unimate Profile</h2>
+    <p class="auth-sub">Your student information.</p>
+    <form id="profileForm" onsubmit="saveProfile(event)">
+      <input id="pFullName" placeholder="Full name" required>
+      <input id="pEmail" type="email" placeholder="Email" readonly>
+      <input id="pCourse" placeholder="Course / Field" required>
+      <input id="pYear" placeholder="Current year" required>
+      <select id="pCountry" required>
+        <option value="">Target country</option>
+        <option>USA</option><option>Germany</option><option>Australia</option><option>New Zealand</option>
+        <option>Taiwan</option><option>Canada</option><option>UK</option><option>France</option>
+        <option>Italy</option><option>Netherlands</option><option>Singapore</option><option>Japan</option>
+      </select>
+      <input id="pIntake" placeholder="Preferred intake" required>
+      <textarea id="pLookingFor" placeholder="What are you looking for?"></textarea>
+      <button class="btn primary auth-submit">Save Profile</button>
+      <div class="auth-msg" id="profileMsg"></div>
+    </form>
+  </div>
+</div>
+
 <script>
 const countries=[["🇺🇸","USA"],["🇩🇪","Germany"],["🇦🇺","Australia"],["🇳🇿","New Zealand"],["🇹🇼","Taiwan"],["🇨🇦","Canada"],["🇬🇧","UK"],["🇫🇷","France"],["🇮🇹","Italy"],["🇳🇱","Netherlands"],["🇸🇬","Singapore"],["🇯🇵","Japan"]];document.getElementById("countryList").innerHTML=countries.map(x=>`<div class="card"><div class="flag">${x[0]}</div><h3>${x[1]}</h3><p>Connect with students planning to study in ${x[1]}.</p></div>`).join("");
+
+const SUPABASE_URL="https://nmplgvrwjdxczwynmsgf.supabase.co";
+const SUPABASE_KEY="sb_publishable_6V8rcQXo1B1442rSC0SxZQ_WBo71t7t";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let mode="login";
+
+function openAuth(){document.getElementById("authOverlay").style.display="flex";showAuth("login")}
+function closeAuth(){document.getElementById("authOverlay").style.display="none";document.getElementById("authMsg").textContent=""}
+function showAuth(m){mode=m;document.getElementById("loginTab").classList.toggle("active",m==="login");document.getElementById("signupTab").classList.toggle("active",m==="signup");document.getElementById("signupFields").style.display=m==="signup"?"block":"none";document.getElementById("authTitle").textContent=m==="signup"?"Create your Unimate account":"Welcome back";document.getElementById("authSub").textContent=m==="signup"?"Connect with students on the same journey.":"Login to your student account.";document.getElementById("authSubmit").textContent=m==="signup"?"Create Account":"Login";document.getElementById("authMsg").textContent=""}
+
+async function handleAuth(e){
+ e.preventDefault();const msg=document.getElementById("authMsg");msg.textContent="Please wait...";
+ const email=document.getElementById("email").value.trim(),password=document.getElementById("password").value;
+ if(mode==="login"){
+   const {error}=await db.auth.signInWithPassword({email,password});
+   if(error){msg.textContent=error.message;return} closeAuth();return;
+ }
+ const data={full_name:document.getElementById("fullName").value.trim(),email,course:document.getElementById("course").value.trim(),year:document.getElementById("year").value.trim(),target_country:document.getElementById("country").value,intake:document.getElementById("intake").value.trim(),looking_for:document.getElementById("lookingFor").value.trim()};
+ const {data:auth,error}=await db.auth.signUp({email,password});
+ if(error){msg.textContent=error.message;return}
+ if(!auth.user){msg.textContent="Check your email to confirm your account.";return}
+ const {error:profileError}=await db.from("students").insert({...data,user_id:auth.user.id});
+ if(profileError){msg.textContent="Account created, but profile save failed: "+profileError.message;return}
+ msg.textContent="Account created successfully!";setTimeout(closeAuth,700);
+}
+
+async function loadProfile(){
+ const {data:user}=await db.auth.getUser();if(!user.user)return;
+ document.getElementById("userMenu").style.display="flex";document.getElementById("userName").textContent=user.user.email;
+ const {data}=await db.from("students").select("*").eq("user_id",user.user.id).maybeSingle();
+ if(data) fillProfile(data);
+}
+function fillProfile(d){pFullName.value=d.full_name||"";pEmail.value=d.email||"";pCourse.value=d.course||"";pYear.value=d.year||"";pCountry.value=d.target_country||"";pIntake.value=d.intake||"";pLookingFor.value=d.looking_for||""}
+async function openProfile(){
+ const {data:user}=await db.auth.getUser();if(!user.user)return openAuth();
+ pEmail.value=user.user.email;await loadProfile();document.getElementById("profileOverlay").style.display="flex"
+}
+function closeProfile(){document.getElementById("profileOverlay").style.display="none"}
+async function saveProfile(e){
+ e.preventDefault();const {data:user}=await db.auth.getUser();if(!user.user)return;
+ const {error}=await db.from("students").update({full_name:pFullName.value.trim(),course:pCourse.value.trim(),year:pYear.value.trim(),target_country:pCountry.value,intake:pIntake.value.trim(),looking_for:pLookingFor.value.trim()}).eq("user_id",user.user.id);
+ document.getElementById("profileMsg").textContent=error?error.message:"Profile saved successfully!";
+}
+async function logout(){await db.auth.signOut();document.getElementById("userMenu").style.display="none";openAuth();showAuth("login")}
+db.auth.onAuthStateChange((_event,session)=>{if(session)loadProfile();else document.getElementById("userMenu").style.display="none"});
+loadProfile();
 </script></body></html>
