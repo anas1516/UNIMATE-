@@ -102,16 +102,14 @@ async function handleAuth(e){
    const {error}=await db.auth.signInWithPassword({email,password});
    if(error){msg.textContent=error.message;return} closeAuth();return;
  }
- const data={full_name:document.getElementById("fullName").value.trim(),email,course:document.getElementById("course").value.trim(),year:document.getElementById("year").value.trim(),target_country:document.getElementById("country").value,intake:document.getElementById("intake").value.trim(),looking_for:document.getElementById("lookingFor").value.trim()};
- const {data:auth,error}=await db.auth.signUp({email,password});
- if(error){msg.textContent=error.message;return}
- if(!auth.user){msg.textContent="Check your email to confirm your account.";return}
- const {error:profileError}=await db.from("students").insert({...data,user_id:auth.user.id});
- if(profileError){msg.textContent="Account created, but profile save failed: "+profileError.message;return}
- msg.textContent="Account created successfully!";setTimeout(closeAuth,700);
-}
-
-async function loadProfile(){
+const {data:auth,error}=await db.auth.signUp({email,password});
+if(error){msg.textContent=error.message;return}
+if(!auth.user){msg.textContent="Check your email to confirm your account.";return}
+const {error:profileError}=await db.from("students").insert({...data,user_id:auth.user.id});
+if(profileError){msg.textContent="Account created, but profile save failed: "+profileError.message;return}
+msg.textContent="Account created successfully!";setTimeout(closeAuth,700);
+async function loadProfile()
+{
  const {data:user}=await db.auth.getUser();if(!user.user)return;
  document.getElementById("userMenu").style.display="flex";document.getElementById("userName").textContent=user.user.email;
  const {data}=await db.from("students").select("*").eq("user_id",user.user.id).maybeSingle();
