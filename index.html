@@ -102,12 +102,30 @@ async function handleAuth(e){
    const {error}=await db.auth.signInWithPassword({email,password});
    if(error){msg.textContent=error.message;return} closeAuth();return;
  }
-const {data:auth,error}=await db.auth.signUp({email,password});
-if(error){msg.textContent=error.message;return}
-if(!auth.user){msg.textContent="Check your email to confirm your account.";return}
-const {error:profileError}=await db.from("students").insert({...data,user_id:auth.user.id});
-if(profileError){msg.textContent="Account created, but profile save failed: "+profileError.message;return}
-msg.textContent="Account created successfully!";setTimeout(closeAuth,700);
+const { data: auth, error } = await db.auth.signUp({
+  email,
+  password
+});
+if (error) {
+  msg.textContent = error.message;
+  return;
+}
+if (!auth.session) {
+  msg.textContent =
+    "Account created! Please confirm your email, then log in to save your profile.";
+  return;
+}
+const { error: profileError } = await db
+  .from("students")
+  .insert({ ...data, user_id: auth.user.id });
+
+if (profileError) {
+  msg.textContent =
+    "Account created, but profile save failed: " + profileError.message;
+  return;
+}
+msg.textContent = "Account created successfully!";
+setTimeout(closeAuth, 700);
 async function loadProfile()
 {
  const {data:user}=await db.auth.getUser();if(!user.user)return;
