@@ -124,9 +124,38 @@ async function openProfile(){
 }
 function closeProfile(){document.getElementById("profileOverlay").style.display="none"}
 async function saveProfile(e){
- e.preventDefault();const {data:user}=await db.auth.getUser();if(!user.user)return;
- const {error}=await db.from("students").update({full_name:pFullName.value.trim(),course:pCourse.value.trim(),year:pYear.value.trim(),target_country:pCountry.value,intake:pIntake.value.trim(),looking_for:pLookingFor.value.trim()}).eq("user_id",user.user.id);
- document.getElementById("profileMsg").textContent=error?error.message:"Profile saved successfully!";
+  e.preventDefault();
+
+  const { data: { user }, error: userError } =
+    await db.auth.getUser();
+
+  const msg = document.getElementById("profileMsg");
+
+  if (userError || !user) {
+    msg.textContent = "Please log in again.";
+    return;
+  }
+
+  const profile = {
+    user_id: user.id,
+    full_name: pFullName.value.trim(),
+    course: pCourse.value.trim(),
+    year: pYear.value.trim(),
+    target_country: pCountry.value,
+    intake: pIntake.value,
+    looking_for: pLookingFor.value.trim()
+  };
+
+  const { error } = await db
+    .from("students")
+    .upsert(profile, { onConflict: "user_id" });
+
+  if (error) {
+    msg.textContent = "Profile save failed: " + error.message;
+    return;
+  }
+
+  msg.textContent = "Profile saved successfully!";
 }
 async function logout(){await db.auth.signOut();document.getElementById("userMenu").style.display="none";openAuth();showAuth("login")}
 db.auth.onAuthStateChange((_event,session)=>{if(session)loadProfile();else document.getElementById("userMenu").style.display="none"});
