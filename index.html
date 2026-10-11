@@ -161,17 +161,19 @@ async function saveProfile(e){
     intake: pIntake.value,
     looking_for: pLookingFor.value.trim()
   };
+const { error } = await db
+  .from("students")
+  .upsert(
+    { ...data, user_id: user.id },
+    { onConflict: "user_id" }
+  );
 
-  const { error } = await db
-    .from("students")
-    .upsert(profile, { onConflict: "user_id" });
+if (error) {
+  msg.textContent = "Profile save failed: " + error.message;
+  return;
+}
 
-  if (error) {
-    msg.textContent = "Profile save failed: " + error.message;
-    return;
-  }
-
-  msg.textContent = "Profile saved successfully!";
+msg.textContent = "Profile saved successfully!";
 }
 async function logout(){await db.auth.signOut();document.getElementById("userMenu").style.display="none";openAuth();showAuth("login")}
 db.auth.onAuthStateChange((_event,session)=>{if(session)loadProfile();else document.getElementById("userMenu").style.display="none"});
