@@ -102,6 +102,15 @@ async function handleAuth(e){
    const {error}=await db.auth.signInWithPassword({email,password});
    if(error){msg.textContent=error.message;return} closeAuth();return;
  }
+  const data = {
+  full_name: document.getElementById("fullName").value.trim(),
+  email,
+  course: document.getElementById("course").value.trim(),
+  year: document.getElementById("year").value.trim(),
+  target_country: document.getElementById("country").value,
+  intake: document.getElementById("intake").value.trim(),
+  looking_for: document.getElementById("lookingFor").value.trim()
+};
 const { data: auth, error } = await db.auth.signUp({
   email,
   password
@@ -126,6 +135,7 @@ if (profileError) {
 }
 msg.textContent = "Account created successfully!";
 setTimeout(closeAuth, 700);
+}
 async function loadProfile()
 {
  const {data:user}=await db.auth.getUser();if(!user.user)return;
@@ -163,10 +173,7 @@ async function saveProfile(e){
   };
 const { error } = await db
   .from("students")
-  .upsert(
-    { ...data, user_id: user.id },
-    { onConflict: "user_id" }
-  );
+  .upsert(profile,{ onConflict: "user_id" });
 
 if (error) {
   msg.textContent = "Profile save failed: " + error.message;
