@@ -314,6 +314,65 @@ if (profileError) {
 msg.textContent = "Account created successfully!";
 setTimeout(closeAuth, 700);
 }
+
+async function loadDirectory() {
+  const msg = document.getElementById("directoryMsg");
+  const list = document.getElementById("directoryList");
+  const country = document.getElementById("directoryCountry").value;
+  const course = document.getElementById("directoryCourse").value.trim();
+
+  msg.textContent = "Searching students...";
+  list.replaceChildren();
+
+  try {
+    let query = db
+      .from("public_student_directory")
+      .select("full_name, course, year, target_country, intake, looking_for");
+
+    if (country) query = query.eq("target_country", country);
+    if (course) query = query.ilike("course", `%${course}%`);
+
+    const { data, error } = await query
+      .order("full_name", { ascending: true })
+      .limit(100);
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      msg.textContent =
+        "No students found. Students must opt in to the public directory.";
+      return;
+    }
+
+    msg.textContent = `Found ${data.length} student(s).`;
+
+    data.forEach(student => {
+      const card = document.createElement("article");
+      card.className = "directory-card";
+
+      const heading = document.createElement("h3");
+      heading.textContent = student.full_name || "Student";
+      card.appendChild(heading);
+
+      [
+        ["Course", student.course],
+        ["Year", student.year],
+        ["Country", student.target_country],
+        ["Intake", student.intake],
+        ["Looking for", student.looking_for]
+      ].forEach(([label, value]) => {
+        if (!value) return;
+        const p = document.createElement("p");
+        p.textContent = `${label}: ${value}`;
+        card.appendChild(p);
+      });
+
+      list.appendChild(card);
+    });
+  } catch (error) {
+    msg.textContent = "Could not load students: " + error.message;
+  }
+}
 async function loadProfile()
 {
  const {data:user}=await db.auth.getUser();if(!user.user)return;
