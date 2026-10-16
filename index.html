@@ -11,6 +11,19 @@
 .auth-msg{min-height:22px;color:#67e8f9;margin-top:10px;font-size:14px}
 .user-menu{display:none;gap:8px;align-items:center}.user-name{color:#67e8f9;font-weight:800}
 @media(max-width:600px){.user-name{display:none}}
+  .directory-optin {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+  color: #aebbd0;
+  font-size: 14px;
+}
+.directory-optin input {
+  width: auto !important;
+  margin: 0;
+  accent-color: #22d3ee;
+}
 </style></head><body>
 
 <nav><div class="logo">Uni<span>mate</span> 🌍</div><ul class="nav"><li><a href="#home">Home</a></li><li><a href="#countries">Countries</a></li><li><a href="#why">Why Unimate</a></li><li><a href="#about">About</a></li><li><button class="btn primary auth-btn" onclick="openAuth()">Login / Sign Up</button></li><li class="user-menu" id="userMenu"><span class="user-name" id="userName"></span><button class="btn secondary auth-btn" onclick="openProfile()">Profile</button><button class="btn secondary auth-btn" onclick="logout()">Logout</button></li></ul></nav>
@@ -77,6 +90,11 @@
       </select>
       <input id="pIntake" placeholder="Preferred intake" required>
       <textarea id="pLookingFor" placeholder="What are you looking for?"></textarea>
+      <label class="directory-optin">
+  <input id="pShowInDirectory" type="checkbox">
+  Show my profile in the public student directory
+</label>
+      
       <button class="btn primary auth-submit">Save Profile</button>
       <div class="auth-msg" id="profileMsg"></div>
     </form>
@@ -143,7 +161,9 @@ async function loadProfile()
  const {data}=await db.from("students").select("*").eq("user_id",user.user.id).maybeSingle();
  if(data) fillProfile(data);
 }
-function fillProfile(d){pFullName.value=d.full_name||"";pEmail.value=d.email||"";pCourse.value=d.course||"";pYear.value=d.year||"";pCountry.value=d.target_country||"";pIntake.value=d.intake||"";pLookingFor.value=d.looking_for||""}
+function fillProfile(d){pFullName.value=d.full_name||"";pEmail.value=d.email||"";pCourse.value=d.course||"";pYear.value=d.year||"";pCountry.value=d.target_country||"";pIntake.value=d.intake||"";pLookingFor.value=d.looking_for||""
+  document.getElementById("pShowInDirectory").checked =
+  d.show_in_directory === true;}
 async function openProfile(){
  const {data:user}=await db.auth.getUser();if(!user.user)return openAuth();
  pEmail.value=user.user.email;await loadProfile();document.getElementById("profileOverlay").style.display="flex"
@@ -169,7 +189,8 @@ async function saveProfile(e){
     year: pYear.value.trim(),
     target_country: pCountry.value,
     intake: pIntake.value,
-    looking_for: pLookingFor.value.trim()
+    looking_for: pLookingFor.value.trim(),looking_for: pLookingFor.value.trim(),
+show_in_directory: document.getElementById("pShowInDirectory").checked
   };
 const { error } = await db
   .from("students")
