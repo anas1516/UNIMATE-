@@ -360,7 +360,6 @@ if (error) {
   msg.textContent = "Profile save failed: " + error.message;
   return;
 }
-
 msg.textContent = "Profile saved successfully!";
 }
 async function logout(){await db.auth.signOut();document.getElementById("userMenu").style.display="none";openAuth();showAuth("login")}
