@@ -325,9 +325,9 @@ async function loadDirectory() {
   list.replaceChildren();
 
   try {
-    let query = db
-      .from("public_student_directory")
-      .select("full_name, course, year, target_country, intake, looking_for");
+let query = db
+  .from("authenticated_student_directory")
+  .select("full_name, course, year, target_country, intake, looking_for, user_id");
 
     if (country) query = query.eq("target_country", country);
     if (course) query = query.ilike("course", `%${course}%`);
@@ -366,13 +366,53 @@ async function loadDirectory() {
         p.textContent = `${label}: ${value}`;
         card.appendChild(p);
       });
-
+const button = document.createElement("button");
+button.type = "button";
+button.className = "btn secondary";
+button.textContent = "Send Buddy Request";
+button.addEventListener("click", () => {
+  sendBuddyRequest(student.user_id);
+});
+card.appendChild(button);
       list.appendChild(card);
     });
   } catch (error) {
     msg.textContent = "Could not load students: " + error.message;
   }
 }
+async function sendBuddyRequest(receiverId) {
+  const msg = document.getElementById("directoryMsg");
+
+  const { data: { user }, error: authError } =
+    await db.auth.getUser();
+
+  if (authError || !user) {
+    msg.textContent = "Please log in to send a buddy request.";
+    openAuth();
+    return;
+  }
+
+  if (user.id === receiverId) {
+    msg.textContent = "You cannot send a request to yourself.";
+    return;
+  }
+
+  const { error } = await db
+    .from("buddy_requests")
+    .insert({
+      sender_id: user.id,
+      receiver_id: receiverId
+    });
+
+  if (error) {
+    msg.textContent = error.code === "23505"
+      ? "You already have a pending request to this student."
+      : "Could not send request: " + error.message;
+    return;
+  }
+
+  msg.textContent = "Buddy request sent successfully!";
+}  
 async function loadProfile()
 {
  const {data:user}=await db.auth.getUser();if(!user.user)return;
