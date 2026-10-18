@@ -429,7 +429,128 @@ async function sendBuddyRequest(receiverId) {
   }
 
   msg.textContent = "Buddy request sent successfully!";
-}  
+}
+
+async function loadBuddyRequests() {
+  const msg = document.getElementById("buddyRequestMsg");
+  const list = document.getElementById("buddyRequestsList");
+
+  msg.textContent = "Loading requests...";
+  list.replaceChildren();
+
+  try {
+    const { data: { user }, error: authError } =
+      await db.auth.getUser();
+
+    if (authError || !user) {
+      msg.textContent = "Please log in to view your requests.";
+      openAuth();
+      return;
+    }
+
+    const { data: requests, error } = await db
+      .from("buddy_requests")
+      .select("id, sender_id, created_at")
+      .eq("receiver_id", user.id)
+      .eq("status", "pending")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    if (!requests || requests.length === 0) {
+      msg.textContent = "You have no pending buddy requests yet.";
+      return;
+    }
+
+    const senderIds = [...new Set(requests.map(r => r.sender_id))];
+
+    const { data: students, error: studentError } = await db
+      .from("authenticated_student_directory")
+      .select("user_id, full_name, course, target_country")
+      .in("user_id", senderIds);
+
+    if (studentError) throw studentError;
+
+    const profiles = new Map(
+      (students || []).map(s => [s.user_id, s])
+    );
+
+    msg.textContent = `${requests.length} pending request(s).`;
+
+    requests.forEach(request => {
+      const student = profiles.get(request.sender_id);
+      const card = document.createElement("article");
+      card.className = "directory-card";
+
+      const heading = document.createElement("h3");
+      heading.textContent = student?.full_name || "Student";
+      card.appendChild(heading);
+
+      if (student?.course) {
+        const course = document.createElement("p");
+        course.textContent = `Course: ${student.course}`;
+        card.appendChild(course);
+      }
+
+      if (student?.target_country) {
+        const country = document.createElement("p");
+        country.textContent = `Destination: ${student.target_country}`;
+        card.appendChild(country);
+      }
+
+      const accept = document.createElement("button");
+      accept.type = "button";
+      accept.className = "btn secondary";
+      accept.textContent = "Accept";
+      accept.addEventListener("click", () =>
+        respondToBuddyRequest(request.id, "accepted")
+      );
+
+      const decline = document.createElement("button");
+      decline.type = "button";
+      decline.className = "btn secondary";
+      decline.textContent = "Decline";
+      decline.addEventListener("click", () =>
+        respondToBuddyRequest(request.id, "declined")
+      );
+
+      card.append(accept, decline);
+      list.appendChild(card);
+    });
+  } catch (error) {
+    msg.textContent = "Could not load requests: " + error.message;
+  }
+}
+
+async function respondToBuddyRequest(requestId, status) {
+  const msg = document.getElementById("buddyRequestMsg");
+
+  if (!["accepted", "declined"].includes(status)) return;
+
+  const { data: { user }, error: authError } =
+    await db.auth.getUser();
+
+  if (authError || !user) {
+    msg.textContent = "Please log in first.";
+    return;
+  }
+
+  const { error } = await db
+    .from("buddy_requests")
+    .update({ status })
+    .eq("id", requestId)
+    .eq("receiver_id", user.id)
+    .eq("status", "pending");
+
+  if (error) {
+    msg.textContent = "Could not update request: " + error.message;
+    return;
+  }
+
+  msg.textContent = `Request ${status} successfully.`;
+  await loadBuddyRequests();
+}
+  
 async function loadProfile()
 {
  const {data:user}=await db.auth.getUser();if(!user.user)return;
