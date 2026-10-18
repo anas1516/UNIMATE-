@@ -564,7 +564,89 @@ async function respondToBuddyRequest(requestId, status) {
   msg.textContent = `Request ${status} successfully.`;
   await loadBuddyRequests();
 }
-  
+ 
+async function loadMyConnections() {
+  const msg = document.getElementById("connectionsMsg");
+  const list = document.getElementById("connectionsList");
+
+  msg.textContent = "Loading your connections...";
+  list.replaceChildren();
+
+  try {
+    const {
+      data: { user },
+      error: authError
+    } = await db.auth.getUser();
+
+    if (authError || !user) {
+      msg.textContent = "Please log in to see your connections.";
+      openAuth();
+      return;
+    }
+
+    const { data: requests, error } = await db
+      .from("buddy_requests")
+      .select("sender_id, receiver_id, created_at")
+      .eq("status", "accepted")
+      .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    const buddyIds = [...new Set(
+      (requests || []).map(request =>
+        request.sender_id === user.id
+          ? request.receiver_id
+          : request.sender_id
+      )
+    )];
+
+    if (buddyIds.length === 0) {
+      msg.textContent = "No connections yet. Accept a buddy request to connect!";
+      return;
+    }
+
+    const { data: profiles, error: profileError } = await db
+      .from("authenticated_student_directory")
+      .select("user_id, full_name, course, year, target_country, intake")
+      .in("user_id", buddyIds);
+
+    if (profileError) throw profileError;
+
+    const profileMap = new Map(
+      (profiles || []).map(profile => [profile.user_id, profile])
+    );
+
+    msg.textContent = `${buddyIds.length} connection(s) found.`;
+
+    buddyIds.forEach(id => {
+      const profile = profileMap.get(id);
+      const card = document.createElement("article");
+      card.className = "directory-card";
+
+      const heading = document.createElement("h3");
+      heading.textContent = profile?.full_name || "Student";
+      card.appendChild(heading);
+
+      [
+        ["Course", profile?.course],
+        ["Year", profile?.year],
+        ["Destination", profile?.target_country],
+        ["Intake", profile?.intake]
+      ].forEach(([label, value]) => {
+        if (!value) return;
+        const p = document.createElement("p");
+        p.textContent = `${label}: ${value}`;
+        card.appendChild(p);
+      });
+
+      list.appendChild(card);
+    });
+  } catch (error) {
+    msg.textContent = "Could not load connections: " + error.message;
+  }
+}
+ 
 async function loadProfile()
 {
  const {data:user}=await db.auth.getUser();if(!user.user)return;
