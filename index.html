@@ -678,6 +678,123 @@ card.appendChild(chatButton);
   }
 }
  
+let activeBuddyId = null;
+let activeBuddyName = "";
+
+async function openBuddyChat(buddyId, buddyName) {
+  activeBuddyId = buddyId;
+  activeBuddyName = buddyName;
+
+  document.getElementById("buddyChatPanel").hidden = false;
+  document.getElementById("buddyChatTitle").textContent =
+    "💬 Chat with " + buddyName;
+
+  await loadChatMessages();
+}
+
+function closeBuddyChat() {
+  activeBuddyId = null;
+  document.getElementById("buddyChatPanel").hidden = true;
+}
+
+async function loadChatMessages() {
+  const msg = document.getElementById("buddyChatMsg");
+  const list = document.getElementById("buddyChatMessages");
+
+  if (!activeBuddyId) return;
+
+  list.replaceChildren();
+  msg.textContent = "Loading messages...";
+
+  try {
+    const { data: { user }, error: authError } =
+      await db.auth.getUser();
+
+    if (authError || !user) {
+      msg.textContent = "Please log in again.";
+      return;
+    }
+
+    const { data, error } = await db
+      .from("chat_messages")
+      .select("id, sender_id, receiver_id, body, created_at")
+      .or(
+        `and(sender_id.eq.${user.id},receiver_id.eq.${activeBuddyId}),and(sender_id.eq.${activeBuddyId},receiver_id.eq.${user.id})`
+      )
+      .order("created_at", { ascending: true });
+
+    if (error) throw error;
+
+    (data || []).forEach(message => {
+      const bubble = document.createElement("div");
+      bubble.style.padding = "10px";
+      bubble.style.margin = "8px 0";
+      bubble.style.borderRadius = "10px";
+      bubble.style.background =
+        message.sender_id === user.id
+          ? "rgba(80,160,255,0.2)"
+          : "rgba(150,150,150,0.15)";
+
+      const text = document.createElement("p");
+      text.textContent = message.body;
+      text.style.whiteSpace = "pre-wrap";
+      bubble.appendChild(text);
+
+      const time = document.createElement("small");
+      time.textContent = new Date(message.created_at)
+        .toLocaleString();
+      bubble.appendChild(time);
+
+      list.appendChild(bubble);
+    });
+
+    msg.textContent = data?.length
+      ? `${data.length} message(s)`
+      : "No messages yet. Say hello!";
+
+    list.scrollTop = list.scrollHeight;
+  } catch (error) {
+    msg.textContent = "Could not load messages: " + error.message;
+  }
+}
+
+document.getElementById("buddyChatForm")
+  .addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const input = document.getElementById("buddyChatInput");
+    const msg = document.getElementById("buddyChatMsg");
+    const body = input.value.trim();
+
+    if (!body || !activeBuddyId) return;
+
+    const { data: { user }, error: authError } =
+      await db.auth.getUser();
+
+    if (authError || !user) {
+      msg.textContent = "Please log in again.";
+      return;
+    }
+
+    msg.textContent = "Sending...";
+
+    const { error } = await db
+      .from("chat_messages")
+      .insert({
+        sender_id: user.id,
+        receiver_id: activeBuddyId,
+        body
+      });
+
+    if (error) {
+      msg.textContent = "Message failed: " + error.message;
+      return;
+    }
+
+    input.value = "";
+    await loadChatMessages();
+  });
+
 async function loadProfile()
 {
  const {data:user}=await db.auth.getUser();if(!user.user)return;
